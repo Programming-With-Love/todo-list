@@ -12,3 +12,18 @@ services:
       - ./mongo-volumn:/data/db
     ports:
       - '27017-27019:27017-27019'
+    networks:
+      - todo
+  bootjar:
+    build:
+      context: ..
+    depends_on:
+      - database
+    container_name: todo-list
+    ports:
+      - 80:8080
+    networks:
+      - todo
+
+networks:
+  todo:

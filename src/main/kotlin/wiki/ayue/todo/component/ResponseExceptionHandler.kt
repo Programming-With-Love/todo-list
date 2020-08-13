@@ -27,7 +27,11 @@ class ResponseExceptionHandler {
   private fun wrapException(status: HttpStatus, exception: Exception) =
     ResponseEntity
       .status(status)
-      .body(Mono.just(exception.message ?: "Unknown exception"))
+      .body(Mono.just(ResponseError(exception.localizedMessage, exception.javaClass.simpleName)))
 
 }
 
+data class ResponseError(
+  val message: String = "Un know message.",
+  val exception: String = "Un catch exception."
+)

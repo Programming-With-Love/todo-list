@@ -2,9 +2,12 @@ package wiki.ayue.todo.config
 
 import com.nimbusds.jose.crypto.RSADecrypter
 import com.nimbusds.jwt.EncryptedJWT
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
+import org.springframework.http.MediaType.TEXT_HTML
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
@@ -18,6 +21,7 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.web.reactive.config.EnableWebFlux
+import org.springframework.web.reactive.function.server.*
 import reactor.core.publisher.Mono
 import wiki.ayue.todo.model.ResourceException
 import java.security.KeyFactory
@@ -86,5 +90,12 @@ class ApplicationConfig {
 
   @Bean
   fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder(11)
+
+  @Bean
+  fun indexRouter(@Value("classpath:/static/index.html") indexHtml: Resource) = router {
+    GET("/") {
+      ServerResponse.ok().contentType(TEXT_HTML).bodyValue(indexHtml)
+    }
+  }
 
 }
