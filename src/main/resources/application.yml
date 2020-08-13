@@ -1,0 +1,11 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://todo:123456@127.0.0.1:27017/todo?authSource=todo&authMechanism=SCRAM-SHA-1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:todo-list.pub
+  gson:
+    date-format: YYYY-MM-DD

@@ -1,0 +1,33 @@
+= Todo List
+:toc: left
+
+Spring webflux、security、jwe todo list demo.
+
+== Login: /auth/login
+
+operation::auth-login[]
+
+== Register: /auth/register
+
+operation::auth-register[]
+
+== Todo List
+
+operation::todo-list[]
+
+== Todo add
+
+operation::todo-add[]
+
+== Todo delete
+
+operation::todo-delete[]
+
+== Todo update
+
+operation::todo-update[]
+
+== Todo get one
+
+operation::todo-one[]
+
