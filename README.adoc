@@ -1,3 +1,84 @@
 = TODO LIST
 
 Todo list from Spring Webflux、Spring Security and Jwe。
+
+- Docs： https://ayue.wiki/todo-list/[Todo List Api]
+
+== Run with docker compose
+
+Init mongodb user script
+
+[source,javascript 1.8]
+.init-mongo.js
+----
+db.createUser({
+  user: "todo",
+  pwd: "123456",
+  roles: [
+    {
+      role: "readWrite",
+      db: "todo"
+    }
+  ]
+})
+----
+
+Config container.
+
+[source,yaml]
+.docker-compose.yml
+----
+version: '3.8'
+services:
+  database:
+    image: mongo
+    container_name: mongo-todo-list
+    environment:
+      MONGO_INITDB_DATABASE: todo
+      MONGO_INITDB_ROOT_USERNAME: todo
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro // <1>
+      - ./mongo-volumn:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+    networks:
+      - todo // <2>
+  bootjar:
+    image: echocow/webflux-todo-list:0.0.1-SNAPSHOT
+    depends_on:
+      - database
+    container_name: todo-list
+    ports:
+      - 80:8080
+    networks:
+      - todo
+
+networks:
+  todo:
+----
+<1> Init database user.
+<2> Use `todo` network.
+
+The build jar will run at `/app.jar`, you can add `application.yaml` to `/application.yaml` config you application.
+
+== Config
+
+The default `application.yml
+
+[source,yaml]
+.application.yml
+----
+include::src/main/resources/application.yml[]
+----
+
+== Security
+
+Default, we use `JSON Web Encryption (JWE)`, the `jks`、`p12` and `pub` are storing in the `resource` directory. You can get them and use `JSON Web Signature (JWS)`, see https://connect2id.com/products/nimbus-jose-jwt[jose-jwt].
+
+== Tests
+
+You can find controller tests in link:src/test/kotlin/wiki/ayue/todo/[todo tests].
+
+- For link:src/test/kotlin/wiki/ayue/todo/AuthControllerTest.kt[AuthControllerTest], mock repository actions.
+- For link:src/test/kotlin/wiki/ayue/todo/TodoControllerTest.kt[TodoControllerTest], mock database by embed mongodb, and mock user with spring security test.
