@@ -1,5 +1,7 @@
 = Todo List
 :toc: left
+:toc-title: Todo List
+:toclevels: 1
 
 Spring webflux、security、jwe todo list demo.
 
